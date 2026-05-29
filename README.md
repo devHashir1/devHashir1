@@ -1,6 +1,6 @@
 
 # 💫 About Me:
-Hi, I am Hashir. 
+Hi, I am Hashir.
 
 
 ## 🌐 Socials:
