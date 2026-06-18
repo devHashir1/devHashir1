@@ -1,5 +1,5 @@
 # 💫 About Me:
-Hi i am HASHIR<br><br>🔭 I’m currently working on Startup TheFuturix <br><br>🌱 I’m currently learning Ml/Ai<br>
+Hi i am HASHIR<br><br>🔭 I’m currently working on a my own project <br><br>🌱 I’m currently learning Ml/Ai<br>
 
 
 ## 🌐 Socials:
