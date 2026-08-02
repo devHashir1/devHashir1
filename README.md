@@ -1,3 +1,9 @@
+<div align="center">
+<img src="./ascii.svg" width="860" alt="self-typing ASCII portrait"/>
+</div>
+
+<br/>
+
 # 💫 About Me:
 Hi i am HASHIR<br><br>🔭 I’m currently working on a my own project <br><br>🌱 I’m currently learning Ml/Ai<br>
 
