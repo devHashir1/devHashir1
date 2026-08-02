@@ -15,7 +15,7 @@ Usage:
     python make_ascii_svg.py photo.jpg ascii.svg
 
     # luminous subjects (glowing objects, backlit scenes, this black hole):
-    python make_ascii_svg.py image.png ascii.svg --gamma 0.8
+    python make_ascii_svg.py image.png ascii.svg --gamma 0.5
 """
 
 import argparse
@@ -33,6 +33,9 @@ GAMMA = 1.35             # >1: only real shadow draws (portraits). Luminous
 CROP_BOTTOM = 0.0        # trim this fraction off the bottom
 BG_COLOR = None          # auto-detected from the image border when None
 BG_TOL = 40              # max RGB distance from BG_COLOR to be treated as bg
+BG_DILATE = 2            # grow the bg mask by N px (absorbs vignette edge bands
+                        # and stray specks that sit just outside the tolerance).
+                        # Note: this also erodes thin subject features by N px.
 MEDIAN = 3               # median filter kernel size (kills 1px specks/stars)
 FG_LIGHT = "#6e7681"     # grey, readable on GitHub light mode
 FG_DARK = "#c9d1d9"      # light grey on GitHub dark mode
@@ -102,7 +105,18 @@ def clahe(gray, clip_limit=CLAHE_CLIP, grid=(8, 8)):
     return res[:h, :w]
 
 
-def prep(path, tol=BG_TOL, clip=CLAHE_CLIP):
+def _dilate(mask, iters=BG_DILATE):
+    """Binary dilation (8-neighbourhood) in pure numpy."""
+    m = mask
+    for _ in range(iters):
+        p = np.pad(m, 1, mode="edge")
+        m = (m
+             | p[:-2, 1:-1] | p[2:, 1:-1] | p[1:-1, :-2] | p[1:-1, 2:]
+             | p[:-2, :-2] | p[:-2, 2:] | p[2:, :-2] | p[2:, 2:])
+    return m
+
+
+def prep(path, tol=BG_TOL, clip=CLAHE_CLIP, dilate=BG_DILATE):
     """Cut the background, smooth, boost local contrast. Returns (gray, bg, bg_frac)."""
     img = Image.open(path).convert("RGB")
     if MEDIAN > 1:
@@ -111,7 +125,7 @@ def prep(path, tol=BG_TOL, clip=CLAHE_CLIP):
 
     bg = BG_COLOR if BG_COLOR is not None else detect_bg(rgb)
     dist = np.sqrt(((rgb - bg) ** 2).sum(axis=2))
-    bg_mask = dist < tol
+    bg_mask = _dilate(dist < tol, dilate or 0)
 
     lum = 0.299 * rgb[..., 0] + 0.587 * rgb[..., 1] + 0.114 * rgb[..., 2]
     gray = np.clip(lum, 0, 255).astype(np.uint8).astype(np.float32)
@@ -193,10 +207,12 @@ def main():
     ap.add_argument("--cols", type=int, default=COLS, help="characters per row (default %(default)s)")
     ap.add_argument("--clip", type=float, default=CLAHE_CLIP, help="CLAHE clip limit (default %(default)s)")
     ap.add_argument("--tol", type=float, default=BG_TOL, help="bg colour distance tolerance (default %(default)s)")
+    ap.add_argument("--dilate", type=int, default=BG_DILATE, help="bg mask dilation in px (default %(default)s)")
     ap.add_argument("--crop-bottom", type=float, default=CROP_BOTTOM, help="fraction trimmed off the bottom")
     args = ap.parse_args()
+    args.dilate = max(0, args.dilate)
 
-    gray, bg, bg_frac = prep(args.src, tol=args.tol, clip=args.clip)
+    gray, bg, bg_frac = prep(args.src, tol=args.tol, clip=args.clip, dilate=args.dilate)
     lines = to_lines(gray, cols=args.cols, gamma=args.gamma, crop=args.crop_bottom)
     print("\n".join(lines))
     build_svg(lines, args.dst, cols=args.cols)
