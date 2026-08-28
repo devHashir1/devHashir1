@@ -12,6 +12,7 @@ Hi, I'm **devHashir1**. This README shares what I'm building, the tools I use, a
     <img src="https://www.gitskins.com/api/section/hero?username=devHashir1&theme=github-dark" alt="devHashir1 hero section" />
   </picture>
 </p>
+
 ## About Me
 
 <p align="center">
@@ -20,6 +21,7 @@ Hi, I'm **devHashir1**. This README shares what I'm building, the tools I use, a
     <img src="https://www.gitskins.com/api/section/about?username=devHashir1&theme=github-dark" alt="devHashir1 about section" />
   </picture>
 </p>
+
 ## Skills
 
 <p align="center">
@@ -36,6 +38,7 @@ Hi, I'm **devHashir1**. This README shares what I'm building, the tools I use, a
     <img src="https://www.gitskins.com/api/section/stats?username=devHashir1&theme=github-dark" alt="devHashir1 stats section" />
   </picture>
 </p>
+
 ## Projects
 
 <p align="center">
@@ -44,6 +47,7 @@ Hi, I'm **devHashir1**. This README shares what I'm building, the tools I use, a
     <img src="https://www.gitskins.com/api/section/projects?username=devHashir1&theme=github-dark" alt="devHashir1 projects section" />
   </picture>
 </p>
+
 ## Heatmap
 
 ## Connect
